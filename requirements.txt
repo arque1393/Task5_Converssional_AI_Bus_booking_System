@@ -1,0 +1,10 @@
+langchain
+langchain-openai 
+langchainhub
+langchain-community
+tavily-python
+langchain-groq
+langchain-google-genai
+langchain-core
+langchain-google-vertexai
+pypdf
