@@ -10,3 +10,7 @@ langchain-google-vertexai
 pypdf
 langchain-text-splitters
 chromadb
+fastapi 
+uvicorn 
+python-multipart
+pydantic[all]
