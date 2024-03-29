@@ -71,7 +71,7 @@ class VectorStore(object):
                         embedding=embedding_function, 
                         persist_directory=persist_dir.resolve().as_posix())
 
-    def similarity_search(self, query:str, k:int):
+    def similarity_search(self, query:str, k:int=5):
         client = chromadb.PersistentClient(str((DATABASE_DIR/self.username).resolve()))
         try:
             client.get_collection(self.collection_name)
