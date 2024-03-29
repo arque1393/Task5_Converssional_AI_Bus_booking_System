@@ -2,3 +2,7 @@
 .env
 Requirements
 *tmp*
+cache_dir/
+__pycache__/
+ChromaDB
+Knowledge_space/
