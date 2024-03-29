@@ -30,7 +30,8 @@ async def root():
 async def upload_file(file:UploadFile = File(...)):
     with open(TMP_FILE_PATH/file.filename, 'wb') as f : 
         shutil.copyfileobj(file.file, f)
-    
+        vs = VectorStore()
+        vs.store_data(TMP_FILE_PATH/file.filename)
     return {"message":'Success'}
 
 
