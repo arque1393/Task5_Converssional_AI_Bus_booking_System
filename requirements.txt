@@ -15,3 +15,8 @@ uvicorn
 python-multipart
 pydantic[all]
 duckduckgo-search
+numexpr
+python-dotenv
+unstructured
+markdown
+langchain_experimental

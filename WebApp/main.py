@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile , File 
+from fastapi import FastAPI, UploadFile , File , HTTPException
 from fastapi.responses import JSONResponse
 import uvicorn 
 from WebApp.constants  import TMP_FILE_PATH 
@@ -6,12 +6,20 @@ from WebApp.models import Query
 # from WebApp.elements.vector_store import 
 import shutil
 
-from WebApp.elements.vector_store import VectorStore
+from WebApp.elements.vector_store import VectorStore, upload_on_vector_db
 from WebApp.elements.agents import create_agent_executer
 from langchain_core.messages import AIMessage, HumanMessage
 
 
 from collections import defaultdict
+import dotenv
+import os 
+dotenv.load_dotenv()
+os.environ["LANGCHAIN_TRACING_V2"]="true"
+os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
+
+
+
 # global chat_hidtory 
 chat_history:dict[str,list] = defaultdict(list)
 
@@ -30,8 +38,12 @@ async def root():
 async def upload_file(file:UploadFile = File(...)):
     with open(TMP_FILE_PATH/file.filename, 'wb') as f : 
         shutil.copyfileobj(file.file, f)
-        vs = VectorStore()
-        vs.store_data(TMP_FILE_PATH/file.filename)
+    
+    try:
+        upload_on_vector_db(TMP_FILE_PATH/file.filename)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'{e}')
+        
     return {"message":'Success'}
 
 
