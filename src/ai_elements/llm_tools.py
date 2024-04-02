@@ -28,7 +28,7 @@ def create_search_tool (vc:VectorStore) -> StructuredTool :
 #         )    
 #     return math_tool
 def create_math_tools():
-    # calculator tool for arithmetics
+    """ return a LLM Tools Python based Math calculator"""
     
     math_tool = Tool.from_function(name="Calculator",
             func=lambda expression : abs(eval(re.sub(r'[^\d.*/\+\-\(\)]', '', expression))),
@@ -37,6 +37,8 @@ def create_math_tools():
     return math_tool
 
 def create_web_search_tools():
+    """Use Duck Duck Go Web Search Engine as """
+    
     search = DuckDuckGoSearchRun()
     Tool.from_function(name="Web Search", func=search.run,
             description="This is Web Search Tools. Useful when you need extra information or real time data. Use this tool only when you unable to found answer using Knowledge-Space-Search tools",

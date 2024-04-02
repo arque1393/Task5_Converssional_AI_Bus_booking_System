@@ -21,6 +21,15 @@ from typing import Annotated
 
 
 def create_agent_executer(vector_store:VectorStore, name:Annotated[str,'currently support only Gorq or Gemini']='gorq'):
+    """Create a Langchain's Agent Executer Object.
+    Args:
+        vector_store (VectorStore): Custom Vector Store Class that Index documents and store in Vector database.
+        name (Annotated[str,&#39;currently support only Gorq or Gemini&#39;], optional): _description_. Defaults to 'gorq'.
+    Raises:
+        Exception: If input is different from the Gemini and Groq
+    Returns:
+        _type_: AgentExecutor : Agent executer object to execute Agent 
+    """
     search_tool = create_search_tool(vector_store)
     math_tool = create_math_tools()
     web_search_tools = create_web_search_tools()
