@@ -2,14 +2,14 @@
 #%% 
 from typing import Union,Sequence,Dict,Any
 from langchain_core.documents import Document
-
+from langchain_community.document_loaders import UnstructuredMarkdownLoader, TextLoader 
 #%% 
 # Import System Module 
 from pathlib import Path 
 
 # Import Custome Module 
-from WebApp.elements.prompts import prompt_template #  Question Answer Prompt Template 
-from WebApp.constants import CACHE_DATASET,DATABASE_DIR,GOOGLE_API_KEY,LLM_MODEL_NAME
+# from src.elements.prompts import prompt_template #  Question Answer Prompt Template 
+from src.constants import CACHE_DATASET,DATABASE_DIR,GOOGLE_API_KEY,LLM_MODEL_NAME
 
 
 # Import Chroma db 
@@ -31,7 +31,13 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 
 
-
+class MySentenceTransformerEmbeddings(SentenceTransformerEmbeddings):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    def _embed_documents(self, texts):
+        return super().embed_documents(texts)  
+    def __call__(self, input):
+        return self._embed_documents(input)    
 
 
 # Checking Database Dir is exist or not 
@@ -44,7 +50,7 @@ if not CACHE_DATASET.is_dir():
 
 
 # Creating Embedding Function
-embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+embedding_function = MySentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 # Creating LLM Tools 
 llm = GoogleGenerativeAI(model=LLM_MODEL_NAME, google_api_key=GOOGLE_API_KEY)
 
@@ -71,7 +77,7 @@ class VectorStore(object):
                         embedding=embedding_function, 
                         persist_directory=persist_dir.resolve().as_posix())
 
-    def similarity_search(self, query:str, k:int):
+    def similarity_search(self, query:str, k:int=5):
         client = chromadb.PersistentClient(str((DATABASE_DIR/self.username).resolve()))
         try:
             client.get_collection(self.collection_name)
@@ -99,7 +105,13 @@ def upload_on_vector_db(file_path:Path,username:str|None = None, collection_name
     # Loading PDF Document 
     if not file_path.exists():
         raise Exception("File Path not exist")
-    loader = PyPDFLoader(str(file_path.resolve()))
+    file_extension = file_path.suffix
+    if file_extension == '.pdf':
+        loader = PyPDFLoader(str(file_path.resolve()))
+    elif file_extension == '.md' : 
+        loader = UnstructuredMarkdownLoader(str(file_path.resolve()))
+    elif file_extension == '.txt':
+        loader = TextLoader(str(file_path.resolve()))
     # Splitting documents in pages
     pages = loader.load_and_split()
     # Extract Text and divide into smaller documents Chunks
@@ -118,25 +130,25 @@ def upload_on_vector_db(file_path:Path,username:str|None = None, collection_name
     return True
 
 
-def get_answer(question:str, username:str='DefaultUser', collection_name:str = 'DefaultCollection', k  = 5):
-    """Make Query of the uploaded file 
-    This function retrieve data from Vector store and pass through a prompt of llm model and retrieve answer. 
+# def get_answer(question:str, username:str='DefaultUser', collection_name:str = 'DefaultCollection', k  = 5):
+#     """Make Query of the uploaded file 
+#     This function retrieve data from Vector store and pass through a prompt of llm model and retrieve answer. 
 
-    Args:
-        question (str): Question String        
-        collection (str): collection name for select collection 
-    Return : 
-        str : Answer String 
-    """        
-    vc = VectorStore(username,collection_name)
-    docs = vc.similarity_search(query=question, k = k)
-    # print(docs)
+#     Args:
+#         question (str): Question String        
+#         collection (str): collection name for select collection 
+#     Return : 
+#         str : Answer String 
+#     """        
+#     vc = VectorStore(username,collection_name)
+#     docs = vc.similarity_search(query=question, k = k)
+#     # print(docs)
  
-    ## Define Dara Retrival Chain from Prompt template and llm models 
-    chain = prompt_template | llm     
-    answer = chain.invoke(
-        {'knowledge':' '.join([page.page_content for page in docs]),
-        'question':question})
-    return answer
+#     ## Define Dara Retrival Chain from Prompt template and llm models 
+#     chain = prompt_template | llm     
+#     answer = chain.invoke(
+#         {'knowledge':' '.join([page.page_content for page in docs]),
+#         'question':question})
+#     return answer
 
-# print(DATABASE_DIR)
+# # print(DATABASE_DIR)
