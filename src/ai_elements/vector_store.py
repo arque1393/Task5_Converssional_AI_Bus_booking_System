@@ -57,6 +57,7 @@ llm = GoogleGenerativeAI(model=LLM_MODEL_NAME, google_api_key=GOOGLE_API_KEY)
 
 
 class VectorStore(object):
+    """Use Chroma Vector Store to store data """
     def __init__(self, username:str='DefaultUser', collection_name:str = 'DefaultCollection') -> None:
         self.username=username
         self.collection_name = collection_name

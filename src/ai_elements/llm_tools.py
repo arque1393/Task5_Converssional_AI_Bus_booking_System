@@ -6,7 +6,8 @@ import requests
 import json
 import re
 from src.ai_elements.llm import gorq_llm
-
+"""This module Contains Various Tools that are used by LLM to retrieve Answers
+"""
 def create_search_tool (vc:VectorStore) -> StructuredTool :
     def knowledge_search(query: str) -> str:
         """Look up things in to knowledge Space."""
@@ -20,15 +21,9 @@ def create_search_tool (vc:VectorStore) -> StructuredTool :
     )
     return search_tool
 
-# def create_math_tools():
-#     # calculator tool for arithmetics
-#     problem_chain = LLMMathChain.from_llm(llm=gorq_llm)
-#     math_tool = Tool.from_function(name="Calculator", func=problem_chain.run,
-#             description="Useful for when you need to answer numeric questions.Only input math expressions, without text. ",
-#         )    
-#     return math_tool
+
 def create_math_tools():
-    # calculator tool for arithmetics
+    """ return a LLM Tools Python based Math calculator"""
     
     math_tool = Tool.from_function(name="Calculator",
             func=lambda expression : abs(eval(re.sub(r'[^\d.*/\+\-\(\)]', '', expression))),
@@ -37,6 +32,8 @@ def create_math_tools():
     return math_tool
 
 def create_web_search_tools():
+    """Use Duck Duck Go Web Search Engine as """
+    
     search = DuckDuckGoSearchRun()
     Tool.from_function(name="Web Search", func=search.run,
             description="This is Web Search Tools. Useful when you need extra information or real time data. Use this tool only when you unable to found answer using Knowledge-Space-Search tools",
@@ -46,6 +43,8 @@ def create_web_search_tools():
 
 ### Food API Tools 
 def create_food_api_tools () -> StructuredTool :
+    """Use Food API To fetch Data """
+    
     def food_api_tools(query:str):
         url = "https://api.edamam.com/api/food-database/v2/parser"
         params = {"app_id":"5dc0f165", 'app_key':'9134b6acc09d8d3edb2e85e3fc99aa81'}
@@ -69,6 +68,7 @@ def create_food_api_tools () -> StructuredTool :
 
 ### Hotel Tools API 
 def create_hotel_api_tools () -> StructuredTool :
+    """Use Hotel API To fetch Data """
 
     def hotel_api_tools(query:str):
         url = "https://booking-com.p.rapidapi.com/v1/hotels/reviews"
