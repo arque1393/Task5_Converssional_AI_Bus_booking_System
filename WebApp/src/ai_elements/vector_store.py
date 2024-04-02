@@ -8,8 +8,8 @@ from langchain_community.document_loaders import UnstructuredMarkdownLoader, Tex
 from pathlib import Path 
 
 # Import Custome Module 
-# from WebApp.elements.prompts import prompt_template #  Question Answer Prompt Template 
-from WebApp.constants import CACHE_DATASET,DATABASE_DIR,GOOGLE_API_KEY,LLM_MODEL_NAME
+# from src.elements.prompts import prompt_template #  Question Answer Prompt Template 
+from src.constants import CACHE_DATASET,DATABASE_DIR,GOOGLE_API_KEY,LLM_MODEL_NAME
 
 
 # Import Chroma db 

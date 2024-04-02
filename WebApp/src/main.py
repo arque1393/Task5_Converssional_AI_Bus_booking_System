@@ -1,13 +1,13 @@
 from fastapi import FastAPI, UploadFile , File , HTTPException
 from fastapi.responses import JSONResponse
 import uvicorn 
-from WebApp.constants  import TMP_FILE_PATH 
-from WebApp.models import Query 
-# from WebApp.elements.vector_store import 
+from src.constants  import TMP_FILE_PATH 
+from src.models import Query 
+# from src.elements.vector_store import 
 import shutil
 
-from WebApp.elements.vector_store import VectorStore, upload_on_vector_db
-from WebApp.elements.agents import create_agent_executer
+from src.ai_elements.vector_store import VectorStore, upload_on_vector_db
+from src.ai_elements.agents import create_agent_executer
 from langchain_core.messages import AIMessage, HumanMessage
 
 
