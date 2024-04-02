@@ -1,6 +1,6 @@
 *.ipynb
 .env
-Requirements
+
 *tmp*
 cache_dir/
 __pycache__/
