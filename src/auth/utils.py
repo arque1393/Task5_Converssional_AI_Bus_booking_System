@@ -1,14 +1,23 @@
-from fastapi import Depends,HTTPException
+from fastapi import Depends,HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from 
-
-
+from passlib.context import CryptContext
+from sqlalchemy.orm import Session 
+from pydantic import EmailStr 
+from pydantic import EmailStr
+from jose import JWTError, jwt
+from pathlib import Path 
+from typing import Annotated
+from src.models import User
+from src.database import Base, get_session
+from src.constants import JWT_AUTH_SECRET_KEY,ALGORITHM
+from datetime import timedelta,timezone,datetime
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/guest/login")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-
-def is_email_or_username_taken(email: EmailStr,username:str, model:Base , session:Session ) -> bool | str:
+def is_email_or_username_taken(email: EmailStr,
+            username:str, model:Base , session:Session ) -> bool | str:
     '''check in database the given email is already exist or not
 input:
     email : Email String
@@ -43,7 +52,7 @@ def get_password_hash(password):
 
 def authenticate_user(username: str, password: str, session:Session):
     """Authenticated an user"""
-    if user := session.query(models.User).filter_by(username=username).first():
+    if user := session.query(User).filter_by(username=username).first():
         return user if verify_password(password, user._password_hash) else False
     else: return False
 
@@ -72,10 +81,9 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],session
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    if user := session.query(models.User).filter_by(username=username).first():
+    if user := session.query(User).filter_by(username=username).first():
         return user
     raise credentials_exception
     
