@@ -1,28 +1,44 @@
 ## For Annotation 
 #%% 
-from typing import Union,Sequence,Dict,Any
-from langchain_core.documents import Document
-from langchain_community.document_loaders import UnstructuredMarkdownLoader, TextLoader 
+from typing import Sequence
 #%% 
 # Import System Module 
 from pathlib import Path 
 
-# Import Custome Module 
-# from src.elements.prompts import prompt_template #  Question Answer Prompt Template 
-from src.constants import CACHE_DATASET,DATABASE_DIR,GOOGLE_API_KEY,LLM_MODEL_NAME
-
+# Import Custom Module 
+from src.constants import ( 
+        CACHE_DATASET,DATABASE_DIR,
+        GOOGLE_API_KEY,LLM_MODEL_NAME
+    )
 
 # Import Chroma db 
 import chromadb 
 
 # import langchain utilities 
+from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings.sentence_transformer \
 import SentenceTransformerEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import (
+            UnstructuredMarkdownLoader,  PyPDFLoader, JSONLoader, 
+            TextLoader ,  BSHTMLLoader, CSVLoader,Docx2txtLoader
+        )
 from langchain_google_genai import GoogleGenerativeAI 
+
+
+
+file_ext_to_loader={
+    '.txt': TextLoader,
+    '.pdf': PyPDFLoader,
+    '.html': BSHTMLLoader,
+    '.csv' : CSVLoader,
+    '.docx':Docx2txtLoader,
+    '.doc':Docx2txtLoader,   
+    '.json':JSONLoader 
+}
+
 
 
 # Import Google GenAI for Configuration 
@@ -106,13 +122,8 @@ def upload_on_vector_db(file_path:Path,username:str|None = None, collection_name
     # Loading PDF Document 
     if not file_path.exists():
         raise Exception("File Path not exist")
-    file_extension = file_path.suffix
-    if file_extension == '.pdf':
-        loader = PyPDFLoader(str(file_path.resolve()))
-    elif file_extension == '.md' : 
-        loader = UnstructuredMarkdownLoader(str(file_path.resolve()))
-    elif file_extension == '.txt':
-        loader = TextLoader(str(file_path.resolve()))
+    file_extension = file_path.suffix    
+    loader = file_ext_to_loader[file_extension](str(file_path.resolve()))
     # Splitting documents in pages
     pages = loader.load_and_split()
     # Extract Text and divide into smaller documents Chunks

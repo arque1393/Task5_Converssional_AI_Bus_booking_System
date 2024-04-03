@@ -20,3 +20,6 @@ python-dotenv
 unstructured
 markdown
 langchain_experimental
+unstructured[pdf]
+unstructured[doc_type]
+unstructured[pptx]
