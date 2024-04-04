@@ -18,7 +18,7 @@ from src.chat.schemas import Query
 from src.ai_elements.vector_store import upload_on_vector_db, VectorStore 
 from src.ai_elements.agents import create_agent_executer
 from src.chat.schemas import ConversationDisplay
-
+from src.chat.utils import parse_chat_history
 chat_routers = APIRouter()
 @chat_routers.post('/upload')
 async def upload_file(file:UploadFile = File(...)):
@@ -64,10 +64,13 @@ async def get_chat(conversation_id:int,
 
 
 @chat_routers.post('/conversation/{conversation_id}/ask',tags=['chat'] )
-async def ask_question(conversation_id : int|str, query:Query, 
+async def ask_question(conversation_id : str, query:Query, 
                 current_user: Annotated[schemas.User,Depends(get_current_user)],
                 session:Session=Depends(get_session)):
-    
+    try: 
+        conversation_id= int(conversation_id)
+    except: 
+        pass
     title = query.question  # TODO 
     username=current_user.username
     
@@ -82,7 +85,7 @@ async def ask_question(conversation_id : int|str, query:Query,
             models.User.user_id == current_user.user_id).first()
         chat_history = conversation.history
         
-    
+    parse_chat_history(chat_history)
     response = agent_executor.invoke(
         {
             "input": query.question,

@@ -25,14 +25,9 @@ chat_history:dict[str,list] = defaultdict(list)
 
 models.Base.metadata.create_all(engine)
 
-
-
-
 if not TMP_FILE_PATH.exists():
     TMP_FILE_PATH.mkdir(parents=True)
-    
-    
-    
+
 app = FastAPI()
 @app.get('/')
 async def root():
