@@ -23,7 +23,7 @@ langchain_experimental
 unstructured[pdf]
 unstructured[doc_type]
 unstructured[pptx]
-
+sentence-transformers
 ## Auth utilities 
 pydantic[email]
 python-jose[cryptography]

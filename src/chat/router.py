@@ -6,9 +6,9 @@ from langchain_core.messages import AIMessage, HumanMessage
 # ORM
 from sqlalchemy.orm import Session
 # System
-from datetime import timedelta
 from typing import Annotated,List,Dict
 import shutil
+import json
 # Custom 
 from src import schemas, models
 from src.database import get_session
@@ -18,7 +18,7 @@ from src.chat.schemas import Query
 from src.ai_elements.vector_store import upload_on_vector_db, VectorStore 
 from src.ai_elements.agents import create_agent_executer
 from src.chat.schemas import ConversationDisplay
-from src.chat.utils import json_to_chat_history
+from src.chat.utils import json_to_chat_history,chat_history_to_json
 chat_routers = APIRouter()
 @chat_routers.post('/upload')
 async def upload_file(file:UploadFile = File(...)):
@@ -54,7 +54,7 @@ async def get_chat(conversation_id:int,
                 models.Conversation.conversation_id==conversation_id and
                 models.User.user_id == current_user.user_id).first():
         
-            return conversation.history
+            return json.loads(conversation.history)
         else:
             raise HTTPException(status_code=404, detail = "No Conversation is found")
     except :
@@ -94,16 +94,17 @@ async def ask_question(conversation_id : str, query:Query,
     )
     
     chat_history_json += [
-        HumanMessage(content=response['input']).dict(),
-        AIMessage(content=response['output']).dict()
+        HumanMessage(content=response['input']),
+        AIMessage(content=response['output'])
     ]
-    # return chat_history
+    chat_history_json = chat_history_to_json(chat_history)
+    
     if conversation_id=='new':
         conversation = models.Conversation(conversation_title=title, 
-                    user_id=current_user.user_id , history=chat_history, )
+                    user_id=current_user.user_id , history=chat_history_json, )
     else : 
-        conversation.history = chat_history
-
+        conversation.history = chat_history_json
+    
     session.add(conversation)
     session.commit()
     session.refresh(conversation)
