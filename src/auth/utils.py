@@ -12,7 +12,7 @@ from src.database import Base, get_session
 from src.constants import JWT_AUTH_SECRET_KEY,ALGORITHM
 from datetime import timedelta,timezone,datetime
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/guest/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 

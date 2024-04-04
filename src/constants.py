@@ -15,3 +15,7 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 LLM_MODEL_NAME = r'models/gemini-pro'
 # LLM_MODEL_NAME = r'models//gemini-pro-version'
 # LLM_MODEL_NAME = r'models/aqa'
+
+JWT_AUTH_SECRET_KEY = os.getenv('JWT_AUTH_SECRET_KEY')
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 50

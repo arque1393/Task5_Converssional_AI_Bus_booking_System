@@ -23,3 +23,10 @@ langchain_experimental
 unstructured[pdf]
 unstructured[doc_type]
 unstructured[pptx]
+
+## Auth utilities 
+pydantic[email]
+python-jose[cryptography]
+passlib[bcrypt]
+sqlalchemy 
+psycopg2

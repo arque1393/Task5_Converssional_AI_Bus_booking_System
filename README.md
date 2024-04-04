@@ -9,11 +9,16 @@
 ```bash
 git clone https://github.com/arque1393/Task5_Converssional_AI_Bus_booking_System.git
 cd Task5_Converssional_AI_Bus_booking_System
-conda env create -f requirements/base.conda.yml
+python -m venv .virtual_env
 ```
-- **Run Project **
+- **Run Project in Windows**
 ```bash
-conda activate AI_Assistant
+source .virtual_env/Scripts/activate
+python -m src.main 
+```
+- **Run Project in Linux/Unix**
+```bash
+source .virtual_env/bin/activate
 python -m src.main 
 ```
 

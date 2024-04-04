@@ -1,6 +1,15 @@
-from pydantic  import BaseModel 
+from pydantic  import BaseModel , EmailStr
 
-class Query(BaseModel):
-    '''Pydantic model to get Query'''
-    question:str 
+
     
+class User(BaseModel):
+    user_id:int
+    username: str
+    email: str
+    class Config:
+        from_attribute = True
+
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password:str
