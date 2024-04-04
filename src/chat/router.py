@@ -18,7 +18,7 @@ from src.chat.schemas import Query
 from src.ai_elements.vector_store import upload_on_vector_db, VectorStore 
 from src.ai_elements.agents import create_agent_executer
 from src.chat.schemas import ConversationDisplay
-from src.chat.utils import parse_chat_history
+from src.chat.utils import json_to_chat_history
 chat_routers = APIRouter()
 @chat_routers.post('/upload')
 async def upload_file(file:UploadFile = File(...)):
@@ -78,14 +78,14 @@ async def ask_question(conversation_id : str, query:Query,
     agent_executor = create_agent_executer(vector_store=vs)   
     
     if conversation_id=='new':
-        chat_history = [] 
+        chat_history_json = [] 
     else:
         conversation = session.query(models.Conversation).filter(
             models.Conversation.conversation_id==conversation_id and
             models.User.user_id == current_user.user_id).first()
-        chat_history = conversation.history
+        chat_history_json = conversation.history
         
-    parse_chat_history(chat_history)
+    chat_history = json_to_chat_history(chat_history_json)
     response = agent_executor.invoke(
         {
             "input": query.question,
@@ -93,7 +93,7 @@ async def ask_question(conversation_id : str, query:Query,
         }
     )
     
-    chat_history += [
+    chat_history_json += [
         HumanMessage(content=response['input']).dict(),
         AIMessage(content=response['output']).dict()
     ]
