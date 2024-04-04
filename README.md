@@ -15,7 +15,7 @@ pip install -r requirements/base.txt
 ```
 - **Run Project **
 ```bash
-source ./<virtual_env>/Scripts/activate 
+source ./<virtual_env>/bin/activate 
 python -m src.main 
 ```
 - **Create Environment in Windows **
