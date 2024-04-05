@@ -9,17 +9,19 @@
 ```bash
 git clone https://github.com/arque1393/Task5_Converssional_AI_Bus_booking_System.git
 cd Task5_Converssional_AI_Bus_booking_System
-python -m venv .virtual_env
+python -m venv <virtual_env>
+source ./<virtual_env>/bin/activate 
+pip install -r requirements/base.txt
 ```
 - **Run Project in Windows**
 ```bash
 source .virtual_env/Scripts/activate
-python -m src.main 
+uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 - **Run Project in Linux/Unix**
 ```bash
 source .virtual_env/bin/activate
-python -m src.main 
+uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
 
