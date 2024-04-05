@@ -9,4 +9,3 @@ RUN ./out/bin/activate
 RUN pip install -r requirements/base.txt
 RUN ./out/bin/activate
 EXPOSE 8000
-CMD ["./out/bin/python", "-m", "src.main"]
