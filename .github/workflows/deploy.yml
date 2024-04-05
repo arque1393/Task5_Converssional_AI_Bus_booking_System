@@ -85,21 +85,21 @@ jobs:
           envs: GOOGLE_API_KEY, GROQ_API_KEY, LANGCHAIN_API_KEY, LANGCHAIN_TRACING_V2, LANGCHAIN_ENDPOINT, DATABASE_USER, DATABASE_NAME, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT, JWT_AUTH_SECRET_KEY, ALGORITHM, IMAGE_TAG, PORT
           script: |
             cd ~/bbs-python-compose
-            touch .env
-            echo "GOOGLE_API_KEY=${{secrets.GOOGLE_API_KEY}}" > .env
-            echo "GROQ_API_KEY=${{secrets.GROQ_API_KEY}}" >> .env
-            echo "LANGCHAIN_API_KEY=${{secrets.LANGCHAIN_API_KEY}}" >> .env
-            echo "LANGCHAIN_TRACING_V2=true" >> .env
-            echo "LANGCHAIN_ENDPOINT=https://api.smith.langchain.com" >> .env
-            echo "DATABASE_USER=${{secrets.DATABASE_USER}}" >> .env
-            echo "DATABASE_NAME=${{secrets.DATABASE_NAME}}" >> .env
-            echo "DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}}" >> .env
-            echo "DATABASE_HOST=${{secrets.DATABASE_HOST}}" >> .env
-            echo "DATABASE_PORT=5432" >> .env
-            echo "JWT_AUTH_SECRET_KEY=${{secrets.JWT_AUTH_SECRET_KEY}}" >> .env
-            echo "ALGORITHM=HS256" >> .env
-            echo "IMAGE_TAG=latest" >> .env
-            echo "PORT=12000" >> .env
+            sudo touch .env
+            sudo echo "GOOGLE_API_KEY=${{secrets.GOOGLE_API_KEY}}" > .env
+            sudo echo "GROQ_API_KEY=${{secrets.GROQ_API_KEY}}" >> .env
+            sudo echo "LANGCHAIN_API_KEY=${{secrets.LANGCHAIN_API_KEY}}" >> .env
+            sudo echo "LANGCHAIN_TRACING_V2=true" >> .env
+            sudo echo "LANGCHAIN_ENDPOINT=https://api.smith.langchain.com" >> .env
+            sudo echo "DATABASE_USER=${{secrets.DATABASE_USER}}" >> .env
+            sudo echo "DATABASE_NAME=${{secrets.DATABASE_NAME}}" >> .env
+            sudo echo "DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}}" >> .env
+            sudo echo "DATABASE_HOST=${{secrets.DATABASE_HOST}}" >> .env
+            sudo echo "DATABASE_PORT=5432" >> .env
+            sudo echo "JWT_AUTH_SECRET_KEY=${{secrets.JWT_AUTH_SECRET_KEY}}" >> .env
+            sudo echo "ALGORITHM=HS256" >> .env
+            sudo echo "IMAGE_TAG=latest" >> .env
+            sudo echo "PORT=12000" >> .env
             sudo docker compose -f docker-compose-bbs-python-be.yml down --volumes
             sudo docker compose -f docker-compose-bbs-python-be.yml pull
             sudo docker compose -f docker-compose-bbs-python-be.yml up -d
