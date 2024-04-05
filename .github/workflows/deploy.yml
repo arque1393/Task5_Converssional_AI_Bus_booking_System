@@ -73,8 +73,8 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_SSH_KEY }}
-          source: "docker-compose-bbs-python-be.yml"
-          target: "~/AI_Aritra_BBS/docker-compose-bbs-python-be.yml"
+          source: "docker-compose-bbs-python-be.yml,set_env.sh"
+          target: "~/bbs-python-compose/"
 
       - name: SSH to server
         uses: appleboy/ssh-action@master
@@ -83,7 +83,10 @@ jobs:
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_SSH_KEY }}
           script: |
-            cd ~/AI_Aritra_BBS
-            sudo docker compose down -f docker-compose-bbs-python-be.yml --volumes
-            sudo docker compose pull -f docker-compose-bbs-python-be.yml
-            sudo docker compose up -f docker-compose-bbs-python-be.yml -d
+            cd ~/bbs-python-compose
+            sudo chmod +x set_env.sh
+            sudo ./set_env.sh
+            sudo docker compose -f docker-compose-bbs-python-be.yml down --volumes
+            sudo docker compose -f docker-compose-bbs-python-be.yml pull
+            sudo docker compose -f docker-compose-bbs-python-be.yml up -d
+            
