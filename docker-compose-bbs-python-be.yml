@@ -7,9 +7,9 @@ services:
     ports:
       - "${PORT}:8000"
     environment:
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY }
-      GROQ_API_KEY: ${GROQ_API_KEY }
-      LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY }
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY}
       LANGCHAIN_TRACING_V2: true
       LANGCHAIN_ENDPOINT: "https://api.smith.langchain.com"
       DATABASE_USER: ${DATABASE_USER}
