@@ -54,21 +54,21 @@ async def login():
 async def ask_question(query:Query, token: str = Depends(oauth2_scheme)):
     username='defaultUser'
     print(token)
-    # vs = VectorStore()
-    # agent_executor = create_agent_executer(vector_store=vs)
+    vs = VectorStore()
+    agent_executor = create_agent_executer(vector_store=vs)
     
-    # response = agent_executor.invoke(
-    #     {
-    #         "input": query.question,
-    #         "chat_history": chat_history[username]
-    #     }
-    # )
+    response = agent_executor.invoke(
+        {
+            "input": query.question,
+            "chat_history": chat_history[username]
+        }
+    )
     
-    # chat_history[username] += [
-    #     HumanMessage(content=response['input']),
-    #     AIMessage(content=response['output'])
-    # ]
-    # return {'answer': response['output']}
+    chat_history[username] += [
+        HumanMessage(content=response['input']),
+        AIMessage(content=response['output'])
+    ]
+    return {'answer': response['output']}
     
 if __name__ =='__main__':
-    uvicorn.run(app,host='localhost',port=8000)
+    uvicorn.run(app,host='0.0.0.0',port=8000)
