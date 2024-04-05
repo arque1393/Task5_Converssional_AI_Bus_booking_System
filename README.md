@@ -5,7 +5,7 @@
     An API Backend to chat with a Bot that provide as much as possible accurate information of Bus booking System and can also answers of the relevant questions of th Bus Booking System.
 
 ## Creating environment and run Program 
-- **Create Environment**
+- **Create Environment in Linux **
 ```bash
 git clone https://github.com/arque1393/Task5_Converssional_AI_Bus_booking_System.git
 cd Task5_Converssional_AI_Bus_booking_System
@@ -15,13 +15,23 @@ pip install -r requirements/base.txt
 ```
 - **Run Project in Windows**
 ```bash
-source .virtual_env/Scripts/activate
-uvicorn src.main:app --host 0.0.0.0 --port 8000
+
+source ./<virtual_env>/bin/activate 
+python -m src.main 
 ```
-- **Run Project in Linux/Unix**
+- **Create Environment in Windows **
 ```bash
-source .virtual_env/bin/activate
-uvicorn src.main:app --host 0.0.0.0 --port 8000
+git clone https://github.com/arque1393/Task5_Converssional_AI_Bus_booking_System.git
+cd Task5_Converssional_AI_Bus_booking_System
+python -m venv <virtual_env>
+source ./<virtual_env>/Scripts/activate 
+pip install -r requirements/base.txt
+```
+- **Run Project **
+```bash
+source ./<virtual_env>/Scripts/activate 
+python -m src.main 
+
 ```
 
 
