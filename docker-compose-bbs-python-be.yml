@@ -24,7 +24,7 @@ services:
       - bbs-python-network
     restart: unless-stopped
     depends_on:
-      db:
+      pg-bbs-python-db:
         condition: service_healthy
   pg-bbs-python-db:
     image: postgres:alpine
