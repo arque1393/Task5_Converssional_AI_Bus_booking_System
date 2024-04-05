@@ -16,6 +16,7 @@ env:
   JWT_AUTH_SECRET_KEY: ${{secrets.JWT_AUTH_SECRET_KEY}}
   ALGORITHM: "HS256"
   IMAGE_TAG: "latest"
+  PORT: 12000
 
 jobs:
   build:
