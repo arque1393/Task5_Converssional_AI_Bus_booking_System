@@ -13,8 +13,9 @@ python -m venv <virtual_env>
 source ./<virtual_env>/bin/activate 
 pip install -r requirements/base.txt
 ```
-- **Run Project **
+- **Run Project in Windows**
 ```bash
+
 source ./<virtual_env>/bin/activate 
 python -m src.main 
 ```
@@ -30,6 +31,7 @@ pip install -r requirements/base.txt
 ```bash
 source ./<virtual_env>/Scripts/activate 
 python -m src.main 
+
 ```
 
 

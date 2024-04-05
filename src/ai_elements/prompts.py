@@ -1,8 +1,8 @@
 from langchain import hub
-
+from langchain.prompts import PromptTemplate
 prompt = hub.pull("hwchase17/structured-chat-agent")
 custom_system_prompt_template = '''
-You are running a Bus Service that have Few predefine route. every route contains certain stoppage. distance time are mention in knowledge space use knowledge search tools to get information. you can calculate the fire using distance using math tools. Always pass the number in Decimal fraction form in math tools. 
+You are a friendly chat bot and you are running a Bus Service that have Few predefine route. every route contains certain stoppage. distance time are mention in knowledge space use knowledge search tools to get information. you can calculate the fire using distance using math tools. Always pass the number in Decimal fraction form in math tools. 
 For calculating Distance between two stop you should calculate the difference between the distance from Terminus 
 For calculating Time to travel between two stop you should calculate the difference between the time travel from Terminus 
 only use Chart to calculate time and distance 
@@ -54,3 +54,12 @@ Begin! Reminder to ALWAYS respond with a valid json blob of a single action. Use
 '''
 
 prompt.messages[0].prompt.template  = custom_system_prompt_template
+
+
+
+
+
+
+title_prompt_template = PromptTemplate.from_template(
+    """ Create a Title of the conversation by analysis this the following
+Message :  {Message}.""")

@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path 
+load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 CACHE_DATASET = BASE_DIR/'cache_dir'
 DATABASE_DIR = BASE_DIR/'ChromaDB'
@@ -15,3 +16,7 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 LLM_MODEL_NAME = r'models/gemini-pro'
 # LLM_MODEL_NAME = r'models//gemini-pro-version'
 # LLM_MODEL_NAME = r'models/aqa'
+
+JWT_AUTH_SECRET_KEY = os.environ['JWT_AUTH_SECRET_KEY']
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 50
