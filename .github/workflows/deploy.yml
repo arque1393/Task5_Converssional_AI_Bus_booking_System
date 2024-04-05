@@ -64,7 +64,7 @@ jobs:
 
       - name: Build and push
         run: |
-          docker compose -f docker-compose-bbs-python-be.yml up
+          docker compose -f docker-compose-bbs-python-be.yml build
           docker compose -f docker-compose-bbs-python-be.yml push
       - name: SCP to server
         uses: appleboy/scp-action@master
