@@ -19,6 +19,7 @@ services:
       DATABASE_PORT: ${DATABASE_PORT}
       JWT_AUTH_SECRET_KEY: ${JWT_AUTH_SECRET_KEY}
       ALGORITHM: "HS256"
+      PORT: 12000
     networks:
       - bbs-python-network
     restart: unless-stopped
