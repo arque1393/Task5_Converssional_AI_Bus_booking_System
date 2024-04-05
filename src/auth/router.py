@@ -18,15 +18,21 @@ auth_routers = APIRouter()
 
 @auth_routers.post("/user", tags=['User Auth'])
 async def create(user:schemas.UserCreate,  session:Session = Depends(get_session)):    
+    print("hdsdjfilgvsi*********************\n\n")
+    
     if validate_entity := is_email_or_username_taken(user.email,user.username, models.User,session):
         raise HTTPException(status_code=400, detail=f'{validate_entity} is already taken')    
     new_user = models.User(email = user.email,username= user.username,
                         _password_hash = get_password_hash(user.password) )  
+    print("hdsdjfilgvsi*********************\n\n")
 
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    
+    print("hdsdjfilgvsi*********************\n\n")
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")

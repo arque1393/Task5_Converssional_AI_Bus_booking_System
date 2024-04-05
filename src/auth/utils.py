@@ -3,7 +3,6 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session 
 from pydantic import EmailStr 
-from pydantic import EmailStr
 from jose import JWTError, jwt
 from pathlib import Path 
 from typing import Annotated
@@ -65,6 +64,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode["exp"] = expire
+    return  jwt.encode(to_encode, '52c6a69436b6576a6abb552f430692fa76b91f126c0ac26916d49b77cbec9624', algorithm=ALGORITHM)
     return  jwt.encode(to_encode, JWT_AUTH_SECRET_KEY, algorithm=ALGORITHM)
 
 
