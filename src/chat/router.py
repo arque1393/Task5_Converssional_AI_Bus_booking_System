@@ -53,8 +53,8 @@ async def get_chat(conversation_id:int,
         if conversation := session.query(models.Conversation).filter(
                 models.Conversation.conversation_id==conversation_id and
                 models.User.user_id == current_user.user_id).first():
-        
-            return json.loads(conversation.history)
+                return [json.loads(conv) for conv in conversation.history]
+             
         else:
             raise HTTPException(status_code=404, detail = "No Conversation is found")
     except :
@@ -80,7 +80,7 @@ async def ask_question(query:Query,
         }
     )
     
-    chat_history_json += [
+    chat_history += [
         HumanMessage(content=response['input']),
         AIMessage(content=response['output'])
     ]
@@ -91,16 +91,13 @@ async def ask_question(query:Query,
     session.commit()
     session.refresh(conversation)
     return {'answer': response['output'], 'conversation_id':conversation.conversation_id}
+
 @chat_routers.post('/conversation/{conversation_id}',tags=['chat'] )
-async def ask_question(conversation_id : str, query:Query, 
+async def ask_question(conversation_id : int, query:Query, 
                 current_user: Annotated[schemas.User,Depends(get_current_user)],
                 session:Session=Depends(get_session)):
-    try: 
-        conversation_id= int(conversation_id)
-    except: 
-        pass
-    title = query.question  # TODO 
-    username=current_user.username
+
+    # username=current_user.username
     
     vs = VectorStore()
     agent_executor = create_agent_executer(vector_store=vs)   
@@ -108,6 +105,7 @@ async def ask_question(conversation_id : str, query:Query,
     conversation = session.query(models.Conversation).filter(
             models.Conversation.conversation_id==conversation_id and
             models.User.user_id == current_user.user_id).first()    
+    # print(type(conversation.history[0]))
     chat_history = json_to_chat_history(conversation.history)
     response = agent_executor.invoke(
         {

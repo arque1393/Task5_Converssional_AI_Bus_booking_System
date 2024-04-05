@@ -8,6 +8,7 @@ langchain-google-genai
 langchain-core
 # langchain-google-vertexai
 pypdf
+docx2txt
 langchain-text-splitters
 chromadb
 fastapi 
@@ -15,7 +16,7 @@ uvicorn
 python-multipart
 pydantic[all]
 duckduckgo-search
-# numexpr
+numexpr
 python-dotenv
 unstructured
 # markdown
