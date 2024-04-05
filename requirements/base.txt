@@ -30,6 +30,6 @@ pydantic[email]
 python-jose[cryptography]
 passlib[bcrypt]
 sqlalchemy 
-psycopg2
-
+# psycopg2
+psycopg2-binary
 
