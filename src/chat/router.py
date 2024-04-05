@@ -29,7 +29,8 @@ async def upload_file(file:UploadFile = File(...)):
         upload_on_vector_db(TMP_FILE_PATH/file.filename)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'{e}')
-        
+    finally:
+        (TMP_FILE_PATH/file.filename).unlink()
     return {"message":'Success'}
 
 
