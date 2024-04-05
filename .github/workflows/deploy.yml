@@ -15,6 +15,7 @@ env:
   DATABASE_PORT: ${{secrets.DATABASE_PORT}}
   JWT_AUTH_SECRET_KEY: ${{secrets.JWT_AUTH_SECRET_KEY}}
   ALGORITHM: "HS256"
+  IMAGE_TAG: "latest"
 
 jobs:
   build:

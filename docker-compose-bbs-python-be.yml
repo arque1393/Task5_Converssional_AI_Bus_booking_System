@@ -1,6 +1,6 @@
 services:
   backend:
-    image: bbs-python-be:${IMAGE_TAG}
+    image: jainilp12/bbs-python-be:${IMAGE_TAG}
     build:
       context: .
       dockerfile: Dockerfile
