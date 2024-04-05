@@ -48,20 +48,38 @@ async def get_chat(current_user: Annotated[schemas.User, Depends(get_current_use
     except Exception as e:
         raise HTTPException(status_code=500, detail= f'{e}')
     
+
+    
+@chat_routers.get('/conversation/all',tags=['chat'])
+async def get_all_conversation(current_user: Annotated[schemas.User, Depends(get_current_user)],
+                session:Session=Depends(get_session)):
+    try:
+        if conversation_list := session.query(models.Conversation).filter(models.Conversation.user_id == current_user.user_id).all():
+                return [{
+                        'conversation_id': conversation.conversation_id,
+                        'title':conversation.conversation_title,
+                        'content':[json.loads(conv) for conv in conversation.history],                    
+                        }for conversation in conversation_list]
+        else:
+            raise HTTPException(status_code=404, detail = "No Conversation is found")
+    except :
+        raise HTTPException(status_code=404, detail='Conversation not found')
+    
+
+
 @chat_routers.get('/conversation/{conversation_id}',tags=['chat'] , response_model= List|Dict)
 async def get_chat(conversation_id:int,
                 current_user: Annotated[schemas.User, Depends(get_current_user)],
                 session:Session=Depends(get_session)):
     try:
         if conversation := session.query(models.Conversation).filter(
-                models.Conversation.conversation_id==conversation_id and
-                models.User.user_id == current_user.user_id).first():
+                models.Conversation.user_id == current_user.user_id).filter(
+                models.Conversation.conversation_id==conversation_id).first():
                 return [json.loads(conv) for conv in conversation.history]
         else:
             raise HTTPException(status_code=404, detail = "No Conversation is found")
     except :
         raise HTTPException(status_code=404, detail='Conversation not found')
-    
     
 
 @chat_routers.post('/conversation',tags=['chat'] )
@@ -107,7 +125,7 @@ async def ask_question(conversation_id : int, query:Query,
 
     conversation = session.query(models.Conversation).filter(
             models.Conversation.conversation_id==conversation_id and
-            models.User.user_id == current_user.user_id).first()    
+            models.Conversation.user_id == current_user.user_id).first()    
     # print(type(conversation.history[0]))
     chat_history = json_to_chat_history(conversation.history)
     response = agent_executor.invoke(
@@ -128,4 +146,5 @@ async def ask_question(conversation_id : int, query:Query,
     session.commit()
     session.refresh(conversation)
     return {'answer': response['output'], 'conversation_id':conversation.conversation_id}
+
 
