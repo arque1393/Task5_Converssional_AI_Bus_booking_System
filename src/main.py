@@ -48,7 +48,7 @@ async def upload_file(file:UploadFile = File(...)):
     return {"message":'Success'}
 @app.post('/guest/login')
 async def login():
-    return uuid.uuid4()
+    return {'access_token':uuid.uuid4()}
 
 @app.post('/ask', )
 async def ask_question(query:Query, token: str = Depends(oauth2_scheme)):

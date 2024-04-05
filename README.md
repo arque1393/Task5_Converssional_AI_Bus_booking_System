@@ -5,15 +5,30 @@
     An API Backend to chat with a Bot that provide as much as possible accurate information of Bus booking System and can also answers of the relevant questions of th Bus Booking System.
 
 ## Creating environment and run Program 
-- **Create Environment**
+- **Create Environment in Linux **
 ```bash
 git clone https://github.com/arque1393/Task5_Converssional_AI_Bus_booking_System.git
 cd Task5_Converssional_AI_Bus_booking_System
-conda env create -f requirements/base.conda.yml
+python -m venv <virtual_env>
+source ./<virtual_env>/bin/activate 
+pip install -r requirements/base.txt
 ```
 - **Run Project **
 ```bash
-conda activate AI_Assistant
+source ./<virtual_env>/bin/activate 
+python -m src.main 
+```
+- **Create Environment in Windows **
+```bash
+git clone https://github.com/arque1393/Task5_Converssional_AI_Bus_booking_System.git
+cd Task5_Converssional_AI_Bus_booking_System
+python -m venv <virtual_env>
+source ./<virtual_env>/Scripts/activate 
+pip install -r requirements/base.txt
+```
+- **Run Project **
+```bash
+source ./<virtual_env>/Scripts/activate 
 python -m src.main 
 ```
 
