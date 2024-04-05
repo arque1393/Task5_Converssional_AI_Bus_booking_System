@@ -3,7 +3,6 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session 
 from pydantic import EmailStr 
-from pydantic import EmailStr
 from jose import JWTError, jwt
 from pathlib import Path 
 from typing import Annotated
