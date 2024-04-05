@@ -1,0 +1,47 @@
+services:
+  backend:
+    image: bbs-python-be:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:8000"
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY }
+      GROQ_API_KEY: ${GROQ_API_KEY }
+      LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY }
+      LANGCHAIN_TRACING_V2: true
+      LANGCHAIN_ENDPOINT: "https://api.smith.langchain.com"
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      JWT_AUTH_SECRET_KEY: ${JWT_AUTH_SECRET_KEY}
+      ALGORITHM: "HS256"
+    networks:
+      - bbs-python-network
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+  pg-bbs-python-db:
+    image: postgres:alpine
+    environment:
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    networks:
+      - bbs-python-network
+
+networks:
+  bbs-python-network:
+    driver: bridge
