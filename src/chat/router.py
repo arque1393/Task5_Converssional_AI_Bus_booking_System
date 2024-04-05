@@ -19,6 +19,8 @@ from src.ai_elements.vector_store import upload_on_vector_db, VectorStore
 from src.ai_elements.agents import create_agent_executer
 from src.chat.schemas import ConversationDisplay
 from src.chat.utils import json_to_chat_history,chat_history_to_json
+from src.ai_elements.prompts import  title_prompt_template
+from src.ai_elements.llm import gorq_llm
 chat_routers = APIRouter()
 @chat_routers.post('/upload')
 async def upload_file(file:UploadFile = File(...)):
@@ -55,7 +57,6 @@ async def get_chat(conversation_id:int,
                 models.Conversation.conversation_id==conversation_id and
                 models.User.user_id == current_user.user_id).first():
                 return [json.loads(conv) for conv in conversation.history]
-             
         else:
             raise HTTPException(status_code=404, detail = "No Conversation is found")
     except :
@@ -67,8 +68,9 @@ async def get_chat(conversation_id:int,
 async def ask_question(query:Query, 
                 current_user: Annotated[schemas.User,Depends(get_current_user)],
                 session:Session=Depends(get_session)):
-  
-    title = query.question  # TODO 
+    llm_chain = title_prompt_template|gorq_llm
+    response = llm_chain.invoke( query.question )
+    title = response.content
     username=current_user.username
     
     vs = VectorStore()
