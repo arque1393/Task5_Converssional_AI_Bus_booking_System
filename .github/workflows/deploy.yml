@@ -85,8 +85,8 @@ jobs:
           key: ${{ secrets.HOST_SSH_KEY }}
           script: |
             cd ~/bbs-python-compose
-            touch .env 
-            chmod 777 .env
+            sudo touch .env 
+            sudo chmod 777 .env
             echo "GOOGLE_API_KEY=${{secrets.GOOGLE_API_KEY}}" >> .env
             echo "GROQ_API_KEY=${{secrets.GROQ_API_KEY}}" >> .env
             echo "LANGCHAIN_API_KEY=${{secrets.LANGCHAIN_API_KEY}}" >> .env
@@ -101,6 +101,6 @@ jobs:
             echo "ALGORITHM=HS256" >> .env
             echo "IMAGE_TAG=latest" >> .env
             echo "PORT=12000" >> .env
-            docker compose -f docker-compose-bbs-python-be.yml down --volumes
-            docker compose -f docker-compose-bbs-python-be.yml pull
-            docker compose -f docker-compose-bbs-python-be.yml up -d
+            sudo docker compose -f docker-compose-bbs-python-be.yml down --volumes
+            sudo docker compose -f docker-compose-bbs-python-be.yml pull
+            sudo docker compose -f docker-compose-bbs-python-be.yml up -d
