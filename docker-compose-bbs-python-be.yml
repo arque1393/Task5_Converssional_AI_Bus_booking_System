@@ -1,6 +1,7 @@
 services:
   backend:
     image: jainilp12/bbs-python-be:${IMAGE_TAG}
+    container_name: bbs-python-be
     build:
       context: .
       dockerfile: Dockerfile
@@ -26,12 +27,14 @@ services:
     depends_on:
       pg-bbs-python-db:
         condition: service_healthy
+  
   pg-bbs-python-db:
     image: postgres:alpine
+    container_name: pg-bbs-python-db
     environment:
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER}"]
       interval: 10s

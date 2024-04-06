@@ -50,6 +50,7 @@ jobs:
           sudo apt-get autoremove -y >/dev/null 2>&1
           sudo apt-get autoclean -y >/dev/null 2>&1
           echo "some packages purged"
+          
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -82,11 +83,10 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_SSH_KEY }}
-          envs: GOOGLE_API_KEY, GROQ_API_KEY, LANGCHAIN_API_KEY, LANGCHAIN_TRACING_V2, LANGCHAIN_ENDPOINT, DATABASE_USER, DATABASE_NAME, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT, JWT_AUTH_SECRET_KEY, ALGORITHM, IMAGE_TAG, PORT
           script: |
             cd ~/bbs-python-compose
-            sudo touch .env 
-            sudo chmod 777 .env
+            touch .env 
+            chmod 777 .env
             echo "GOOGLE_API_KEY=${{secrets.GOOGLE_API_KEY}}" >> .env
             echo "GROQ_API_KEY=${{secrets.GROQ_API_KEY}}" >> .env
             echo "LANGCHAIN_API_KEY=${{secrets.LANGCHAIN_API_KEY}}" >> .env
@@ -101,6 +101,6 @@ jobs:
             echo "ALGORITHM=HS256" >> .env
             echo "IMAGE_TAG=latest" >> .env
             echo "PORT=12000" >> .env
-            sudo docker compose -f docker-compose-bbs-python-be.yml down --volumes
-            sudo docker compose -f docker-compose-bbs-python-be.yml pull
-            sudo docker compose -f docker-compose-bbs-python-be.yml up -d
+            docker compose -f docker-compose-bbs-python-be.yml down --volumes
+            docker compose -f docker-compose-bbs-python-be.yml pull
+            docker compose -f docker-compose-bbs-python-be.yml up -d
