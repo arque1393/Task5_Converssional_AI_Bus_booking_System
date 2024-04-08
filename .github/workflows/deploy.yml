@@ -101,6 +101,6 @@ jobs:
             echo "ALGORITHM=HS256" >> .env
             echo "IMAGE_TAG=latest" >> .env
             echo "PORT=12000" >> .env
-            sudo docker compose -f docker-compose-bbs-python-be.yml down --volumes
-            sudo docker compose -f docker-compose-bbs-python-be.yml pull
-            sudo docker compose -f docker-compose-bbs-python-be.yml up -d
+            docker compose -f docker-compose-bbs-python-be.yml down --volumes
+            docker compose -f docker-compose-bbs-python-be.yml pull
+            docker compose -f docker-compose-bbs-python-be.yml up -d
