@@ -1,6 +1,7 @@
 # FastAPI
-from fastapi import APIRouter,Depends,HTTPException,status
+from fastapi import APIRouter,Depends,HTTPException,status,Header
 from fastapi.security import OAuth2PasswordRequestForm
+from src.auth.utils import oauth2_scheme
 # ORM
 from sqlalchemy.orm import Session
 # System
@@ -12,12 +13,12 @@ from src.database import get_session
 from src.constants import ACCESS_TOKEN_EXPIRE_MINUTES
 from src.auth.utils import( is_email_or_username_taken,get_current_user,
         create_access_token, get_password_hash,authenticate_user)
-from src.auth.schemas import Token
+from src.auth.schemas import TokenResponse
 
 auth_routers = APIRouter()
 
-@auth_routers.post("/user", tags=['User Auth'])
-async def create(user:schemas.UserCreate,  session:Session = Depends(get_session)):    
+@auth_routers.post("/register", tags=['User Auth'],response_model=TokenResponse)
+async def create_user(user:schemas.UserCreate,  session:Session = Depends(get_session)):    
 
     
     if validate_entity := is_email_or_username_taken(user.email,user.username, models.User,session):
@@ -33,13 +34,14 @@ async def create(user:schemas.UserCreate,  session:Session = Depends(get_session
 
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires)
-    return Token(access_token=access_token, token_type="bearer")
+    return TokenResponse(message='success', access_token=access_token, token_type="bearer")
 
-@auth_routers.post("/login", tags=['User Auth'] )
+
+@auth_routers.post("/login", tags=['User Auth'], response_model=TokenResponse)
 async def login_for_access_token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
         session: Session = Depends(get_session) 
-    ) -> Token:
+    ) -> TokenResponse:
     user = authenticate_user(form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(
@@ -51,8 +53,15 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )    
-    return Token(access_token=access_token, token_type="bearer")
-    
+    return TokenResponse(message='success',access_token=access_token, token_type="bearer")
 @auth_routers.get("/user", response_model=schemas.User,tags=['view'])
 async def read_users_me(current_user: Annotated[schemas.User,Depends(get_current_user)]):
     return current_user
+
+
+
+
+@auth_routers.post("/logout")
+def user_logout(Authorization: str = Header(None)):
+    # oauth2_scheme.revoke_token(Authorization)
+    return {"message": "Token revoked"}
