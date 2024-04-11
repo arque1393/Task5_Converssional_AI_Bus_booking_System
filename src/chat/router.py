@@ -17,7 +17,8 @@ from src.auth.utils import get_current_user
 from src.chat.schemas import Query
 from src.ai_elements.vector_store import upload_on_vector_db, VectorStore 
 from src.ai_elements.agents import create_agent_executer
-from src.chat.schemas import ConversationInfo,ConversationDisplay,InitConversation,Message
+from src.chat.schemas import (ConversationInfo,
+        ConversationDisplay,InitConversation,Message)
 from src.chat.utils import json_to_chat_history,chat_history_to_json
 from src.ai_elements.prompts import  title_prompt_template
 from src.ai_elements.llm import gorq_llm
@@ -93,14 +94,13 @@ async def update_title(conversation_id: int, title: str,
             current_user:Annotated[schemas.User, Depends(get_current_user)] ,
             session: Session = Depends(get_session)):
     try:
-        conversation = session.query(models.Conversation).                                    \
-            filter(models.Conversation.user_id == current_user.user_id).                 \
-            filter(models.Conversation.conversation_id == conversation_id).first()
+        conversation=filter(models.Conversation.conversation_id == conversation_id).first()
     except Exception as e: 
         return HTTPException(status_code=404, detail=f'{e}')
-        
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
+    if conversation.user_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="You don't have permission to delete this conversation")  
     conversation.conversation_title = title
     session.add(conversation)
     session.commit()
@@ -150,3 +150,16 @@ async def ask_question( query:Query,
             conversation_id=conversation.conversation_id,
             conversation_title=conversation.conversation_title)
 
+
+@chat_routers.delete('/conversation/{conversation_id}',tags=['chat'], response_model=Message)
+async def get_chat(conversation_id:int,
+                current_user: Annotated[schemas.User, Depends(get_current_user)],
+                session:Session=Depends(get_session)):
+    conversation = session.query(models.Conversation).filter(models.Conversation.conversation_id == conversation_id).first()
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    if conversation.user_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="You don't have permission to delete this conversation")
+    session.delete(conversation)
+    session.commit()
+    return {"message":"success"}
