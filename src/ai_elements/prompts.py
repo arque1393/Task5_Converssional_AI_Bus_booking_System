@@ -61,5 +61,5 @@ prompt.messages[0].prompt.template  = custom_system_prompt_template
 
 
 title_prompt_template = PromptTemplate.from_template(
-    """ Create a Title of the conversation by analysis this the following
+    """ Create a Title of the conversation by analysis this the following in one Line.
 Message :  {Message}.""")

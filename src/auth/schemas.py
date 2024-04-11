@@ -1,9 +1,13 @@
 from pydantic import BaseModel
+from typing import Annotated
+# class SessionData(BaseModel):
+#     username: str
+    
+    
 
-class SessionData(BaseModel):
-    username: str
-    
-    
-class Token(BaseModel):
+
+class TokenResponse(BaseModel):
+    message:str
     access_token: str
     token_type: str
+    
